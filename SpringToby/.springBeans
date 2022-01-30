@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beansProjectDescription>
+	<version>1</version>
+	<pluginVersion><![CDATA[3.9.20.202112202132-RELEASE]]></pluginVersion>
+	<configSuffixes>
+		<configSuffix><![CDATA[xml]]></configSuffix>
+	</configSuffixes>
+	<enableImports><![CDATA[false]]></enableImports>
+	<configs>
+		<config>src/springbook/learningtest/junit/junit.xml</config>
+		<config>src/springbook/learningtest/spring/factorybean/factorybeanContext.xml</config>
+		<config>src/springbook/user/service/annotationTXContext.xml</config>
+		<config>src/springbook/learningtest/spring/oxm/OxmTest-context.xml</config>
+		<config>src/springbook/learningtest/spring/ioc/genericApplicationContext.xml</config>
+		<config>src/springbook/learningtest/spring/ioc/parentContext.xml</config>
+		<config>src/springbook/learningtest/spring/ioc/childContext.xml</config>
+		<config>src/springbook/learningtest/spring/ioc/constructorInjection.xml</config>
+		<config>src/springbook/learningtest/spring/ioc/resource.xml</config>
+		<config>src/springbook/learningtest/spring/ioc/propertyValueContext.xml</config>
+		<config>src/springbook/learningtest/spring/web/controllers/simpleurlhm.xml</config>
+		<config>src/springbook/learningtest/spring/web/controllers/defaulthandler.xml</config>
+		<config>src/springbook/learningtest/spring/web/controllers/handlerInterceptor.xml</config>
+		<config>src/springbook/learningtest/spring/web/exception/simplemappingER.xml</config>
+		<config>src/springbook/learningtest/spring/web/atmvc/conversionServiceFactory.xml</config>
+		<config>src/springbook/learningtest/spring/web/atmvc/configurableWebBindingInitializer.xml</config>
+	</configs>
+	<autoconfigs>
+	</autoconfigs>
+	<configSets>
+	</configSets>
+</beansProjectDescription>
