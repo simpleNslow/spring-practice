@@ -5,6 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -18,6 +21,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.core.convert.support.GenericConversionService;
+import org.springframework.expression.ParseException;
+import org.springframework.format.Formatter;
+import org.springframework.format.FormatterRegistrar;
+import org.springframework.format.FormatterRegistry;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.support.FormattingConversionService;
+import org.springframework.format.support.FormattingConversionServiceFactoryBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -25,6 +35,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.support.ConfigurableWebBindingInitializer;
 import org.springframework.web.bind.support.WebBindingInitializer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
@@ -262,4 +273,95 @@ public class BindingTest extends AbstractDispatcherServletTest {
 		}
 	}
 
+	@Configuration static class Config {
+		@Autowired FormattingConversionService conversionService;
+		
+		@Bean public RequestMappingHandlerAdapter requestMappingMethodHandlerAdapter() {
+			return new RequestMappingHandlerAdapter() {{
+				setWebBindingInitializer(webBindingInit());
+			}};
+		}
+		
+		@Bean public WebBindingInitializer webBindingInit() {
+			return new ConfigurableWebBindingInitializer() {{
+				setConversionService(Config.this.conversionService);
+			}};
+		}
+		
+		@Bean public FormattingConversionServiceFactoryBean formattingConversionServiceFactoryBean() {
+			return new FormattingConversionServiceFactoryBean() {{
+//				setConverters(new LinkedHashSet(Arrays.asList(new Converter[] {new LabelToStringConverter(), new StringToLabelConverter()}))); // convert ����
+				}
+				public void setFormatterRegistrars(Set<FormatterRegistrar> formatterRegistrar) {
+					//super.installFormatters(registry);
+					formatterRegistrar
+					
+					.addFormatterForFieldType(Level.class, new LabelStringFormatter());
+					
+					
+				}
+			};
+		}
+		
+		// formatter
+		static class LabelStringFormatter implements Formatter<Level> {
+			public String print(Level level, Locale locale) {
+				return String.valueOf(level.intValue());
+			}
+
+			public Level parse(String text, Locale locale) throws ParseException {
+				return Level.valueOf(Integer.parseInt(text));
+			}
+		}
+		
+		// converter
+		static class LevelToStringConverter implements Converter<Level, String> {
+			public String convert(Level level) {
+				return String.valueOf(level.intValue());
+			}
+		}
+		
+		static class StringToLevelConverter implements Converter<String, Level> {
+			public Level convert(String text) {
+				return Level.valueOf(Integer.parseInt(text));
+			}
+		}
+	}
+
+	static class User {
+		int id;
+		String name;
+		Level level;
+		@DateTimeFormat(pattern="dd/yy/MM")
+		Date date;
+		
+		public Date getDate() {
+			return date;
+		}
+		public void setDate(Date date) {
+			this.date = date;
+		}
+		public int getId() {
+			return id;
+		}
+		public void setId(int id) {
+			this.id = id;
+		}
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public Level getLevel() {
+			return level;
+		}
+		public void setLevel(Level level) {
+			this.level = level;
+		}
+		@Override
+		public String toString() {
+			return "User [date=" + date + ", id=" + id + ", level=" + level + ", name=" + name + "]";
+		}
+	}
 }
