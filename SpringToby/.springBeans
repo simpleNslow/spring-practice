@@ -23,6 +23,7 @@
 		<config>src/springbook/learningtest/spring/web/exception/simplemappingER.xml</config>
 		<config>src/springbook/learningtest/spring/web/atmvc/conversionServiceFactory.xml</config>
 		<config>src/springbook/learningtest/spring/web/atmvc/configurableWebBindingInitializer.xml</config>
+		<config>src/springbook/learningtest/spring/web/atmvc/mvc-annotation.xml</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>

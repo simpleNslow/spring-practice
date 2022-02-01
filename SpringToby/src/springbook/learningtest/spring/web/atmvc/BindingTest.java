@@ -5,7 +5,9 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 
@@ -273,6 +275,22 @@ public class BindingTest extends AbstractDispatcherServletTest {
 		}
 	}
 
+	@Test
+	public void webBindingInit() throws ServletException, IOException {
+		setClasses(ViewResolver.class, Config.class, UserController.class);
+		initRequest("/add", "POST");
+		addParameter("id", "1").addParameter("name", "Spring").addParameter("date", "02/03/01");
+		addParameter("level", "3");
+		runService();
+		assertEquals(((User)getModelAndView().getModel().get("user")).getLevel(), Level.GOLD);
+	}
+	
+	@Controller static class UserController {
+		@RequestMapping("/add") public void add(@ModelAttribute User user) {
+			System.out.println(user);
+		}
+	}
+
 	@Configuration static class Config {
 		@Autowired FormattingConversionService conversionService;
 		
@@ -290,15 +308,7 @@ public class BindingTest extends AbstractDispatcherServletTest {
 		
 		@Bean public FormattingConversionServiceFactoryBean formattingConversionServiceFactoryBean() {
 			return new FormattingConversionServiceFactoryBean() {{
-//				setConverters(new LinkedHashSet(Arrays.asList(new Converter[] {new LabelToStringConverter(), new StringToLabelConverter()}))); // convert ����
-				}
-				public void setFormatterRegistrars(Set<FormatterRegistrar> formatterRegistrar) {
-					//super.installFormatters(registry);
-					formatterRegistrar
-					
-					.addFormatterForFieldType(Level.class, new LabelStringFormatter());
-					
-					
+				setFormatters(new LinkedHashSet<>(Arrays.asList(new Formatter[] {new LabelStringFormatter()}))); 
 				}
 			};
 		}
